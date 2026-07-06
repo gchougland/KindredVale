@@ -1,5 +1,6 @@
 package com.hexvane.kindredvalemod;
 
+import com.hexvane.kindredvalemod.command.HubBuildCommand;
 import com.hexvane.kindredvalemod.config.HubProtectionConfig;
 import com.hexvane.kindredvalemod.hub.HubProtectionService;
 import com.hexvane.kindredvalemod.hub.systems.HubBlockBreakProtectionSystem;
@@ -10,6 +11,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.events.StartWorldEvent;
 import com.hypixel.hytale.server.core.util.Config;
@@ -44,6 +46,9 @@ public class KindredValeModPlugin extends JavaPlugin {
         entityStoreRegistry.registerSystem(new HubBlockDamageProtectionSystem(hubProtectionService));
 
         getEventRegistry().registerGlobal(StartWorldEvent.class, this::onWorldStart);
+        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class, this::onPlayerDisconnect);
+
+        getCommandRegistry().registerCommand(new HubBuildCommand(hubProtectionService));
     }
 
     @Override
@@ -67,6 +72,10 @@ public class KindredValeModPlugin extends JavaPlugin {
 
     private void onWorldStart(@Nonnull final StartWorldEvent event) {
         hubProtectionService.applyPvpSettings(event.getWorld());
+    }
+
+    private void onPlayerDisconnect(@Nonnull final PlayerDisconnectEvent event) {
+        hubProtectionService.clearBuildMode(event.getPlayerRef().getUuid());
     }
 
     /**

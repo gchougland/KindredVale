@@ -2,6 +2,12 @@
 
 All notable changes to KindredValeMod are documented in this file.
 
+## [0.1.1] - 2026-07-03
+
+### Changed
+
+- **Hub build mode toggle** — Players with `hexvane.kindredvalemod.hub.build` (including `hytale:Admin` via `*`) must run `/hubbuild` to edit blocks in protected hub worlds. Protection stays on by default so staff can hang out in the hub without accidentally breaking blocks. Build mode is per-session and clears on disconnect.
+
 ## [0.1.0] - 2026-07-03
 
 ### Added

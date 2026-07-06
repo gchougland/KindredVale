@@ -55,7 +55,7 @@ public abstract class HubPlayerBlockProtectionSystem<EventType extends Cancellab
             return;
         }
 
-        if (hubProtection.canBuildInHub(uuidComponent.getUuid())) {
+        if (hubProtection.shouldBypassHubProtection(uuidComponent.getUuid())) {
             return;
         }
 

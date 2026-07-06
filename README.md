@@ -436,7 +436,7 @@ hytale.decompile_partial=true
 
 ### Hub protection
 
-Hub worlds are protected via ECS block events — players cannot break, place, or punch blocks unless they have build permission. PvP is disabled on protected worlds by default.
+Hub worlds are protected via ECS block events — players cannot break, place, or punch blocks. Staff with build permission can opt in to editing with `/hubbuild`. PvP is disabled on protected worlds by default.
 
 **Config file:** `mods/hexvane/KindredValeMod/HubProtection.json` (written on first server start if missing)
 
@@ -449,12 +449,14 @@ Hub worlds are protected via ECS block events — players cannot break, place, o
 
 Add world names to `ProtectedWorlds` (case-insensitive) to match your hub world folder names.
 
-**Staff permissions**
+**Staff permissions and build mode**
 
 | Permission | Group | Effect |
 |------------|-------|--------|
-| `hexvane.kindredvalemod.hub.build` | `kindredvale:HubBuilder` | May build in protected hub worlds |
-| `*` | `hytale:Admin` | Full bypass (default admin group) |
+| `hexvane.kindredvalemod.hub.build` | `kindredvale:HubBuilder` | May use `/hubbuild` to edit protected hub worlds |
+| `*` | `hytale:Admin` | Same — admins must toggle build mode on to edit |
+
+Having build permission does not bypass protection by itself. Run `/hubbuild` in a protected hub world to enable editing for your session (`/hubbuild on`, `/hubbuild off`, or no argument to toggle). Build mode resets when you disconnect.
 
 Add the hub builder group to server `permissions.json`:
 
@@ -464,7 +466,7 @@ Add the hub builder group to server `permissions.json`:
 }
 ```
 
-Assign builders with `/setgroup kindredvale:HubBuilder <player>`. Full admins in `hytale:Admin` need no extra setup.
+Assign builders with `/setgroup kindredvale:HubBuilder <player>`. Full admins in `hytale:Admin` have the permission via `*` but still use `/hubbuild` when editing the hub.
 
 ### Project layout
 
@@ -473,6 +475,7 @@ KindredValeMod/
 ├── src/main/java/com/hexvane/kindredvalemod/
 │   ├── KindredValeModPlugin.java    # Plugin entry point
 │   ├── config/                      # Plugin config codecs
+│   ├── command/                     # Player commands (e.g. /hubbuild)
 │   ├── hub/                         # Hub protection service + ECS systems
 │   └── permissions/                 # Permission nodes and groups
 ├── src/main/resources/
