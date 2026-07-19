@@ -1,0 +1,67 @@
+{
+  "id": "aetherhaven_kindredvale_hexvane",
+  "entry": "main_hub",
+  "nodes": {
+    "main_hub": {
+      "speaker": "aetherhaven_dialogue_kindredvale_hexvane.aetherhaven.dialogue.kindredvale_hexvane.root.speaker",
+      "text": "aetherhaven_dialogue_kindredvale_hexvane.aetherhaven.dialogue.kindredvale_hexvane.root.body",
+      "choices": [
+        {
+          "id": "travel",
+          "text": "aetherhaven_dialogue_kindredvale_hexvane.aetherhaven.dialogue.kindredvale_hexvane.root.travel",
+          "next": "travel_hub"
+        },
+        {
+          "id": "goodbye",
+          "text": "aetherhaven_dialogue_kindredvale_hexvane.aetherhaven.dialogue.kindredvale_hexvane.root.goodbye",
+          "next": null
+        }
+      ]
+    },
+    "travel_hub": {
+      "speaker": "aetherhaven_dialogue_kindredvale_hexvane.aetherhaven.dialogue.kindredvale_hexvane.travel.speaker",
+      "text": "aetherhaven_dialogue_kindredvale_hexvane.aetherhaven.dialogue.kindredvale_hexvane.travel.body",
+      "choices": [
+        {
+          "id": "go_kindredvale",
+          "text": "aetherhaven_dialogue_kindredvale_hexvane.aetherhaven.dialogue.kindredvale_hexvane.travel.kindredvale",
+          "icon": "teleport",
+          "condition": {
+            "type": "kindred_destination_available",
+            "destinationId": "kindredvale"
+          },
+          "whenFalse": "hide",
+          "actions": [
+            {
+              "type": "teleport_world",
+              "destinationId": "kindredvale"
+            }
+          ],
+          "next": null
+        },
+        {
+          "id": "go_smp",
+          "text": "aetherhaven_dialogue_kindredvale_hexvane.aetherhaven.dialogue.kindredvale_hexvane.travel.smp",
+          "icon": "teleport",
+          "condition": {
+            "type": "kindred_destination_available",
+            "destinationId": "smp"
+          },
+          "whenFalse": "hide",
+          "actions": [
+            {
+              "type": "teleport_world",
+              "destinationId": "smp"
+            }
+          ],
+          "next": null
+        },
+        {
+          "id": "travel_back",
+          "text": "aetherhaven_dialogue_kindredvale_hexvane.aetherhaven.dialogue.kindredvale_hexvane.travel.back",
+          "next": "main_hub"
+        }
+      ]
+    }
+  }
+}

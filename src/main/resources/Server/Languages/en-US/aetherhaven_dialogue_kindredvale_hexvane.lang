@@ -1,0 +1,10 @@
+# Kindred Vale Hexvane greeter dialogue
+aetherhaven.dialogue.kindredvale_hexvane.root.speaker=Hexvane
+aetherhaven.dialogue.kindredvale_hexvane.root.body=Hey! I am Hexvane. Welcome to Kindred Vale. Talk to me anytime you need a teleport between the hub and the SMP.
+aetherhaven.dialogue.kindredvale_hexvane.root.travel=Where can I travel?
+aetherhaven.dialogue.kindredvale_hexvane.root.goodbye=Thanks, Hexvane!
+aetherhaven.dialogue.kindredvale_hexvane.travel.speaker=Hexvane
+aetherhaven.dialogue.kindredvale_hexvane.travel.body=Pick a destination and I will teleport you there. Safe travels!
+aetherhaven.dialogue.kindredvale_hexvane.travel.kindredvale=Travel to Kindred Vale hub
+aetherhaven.dialogue.kindredvale_hexvane.travel.smp=Travel to the SMP world
+aetherhaven.dialogue.kindredvale_hexvane.travel.back=Never mind

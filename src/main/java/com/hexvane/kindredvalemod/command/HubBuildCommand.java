@@ -65,9 +65,9 @@ public final class HubBuildCommand extends AbstractPlayerCommand {
         }
 
         if (enabled) {
-            playerRef.sendMessage(Message.raw("Hub build mode enabled — you can edit blocks in this world."));
+            playerRef.sendMessage(Message.raw("Hub build mode enabled. You can edit blocks in this world."));
         } else {
-            playerRef.sendMessage(Message.raw("Hub build mode disabled — block protection is active."));
+            playerRef.sendMessage(Message.raw("Hub build mode disabled. Block protection is active."));
         }
     }
 

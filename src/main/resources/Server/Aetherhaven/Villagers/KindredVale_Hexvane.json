@@ -1,0 +1,14 @@
+{
+  "npcRoleId": "KindredVale_Hexvane",
+  "dialogueVillagerKind": "kindredvale_hexvane",
+  "residentTreeId": "aetherhaven_kindredvale_hexvane",
+  "visitorTreeId": "aetherhaven_kindredvale_hexvane",
+  "displayName": "Hexvane",
+  "portraitIcon": "KindredVale_Hexvane.png",
+  "speechVoiceId": "low",
+  "uiSortOrder": 0,
+  "reputationMilestones": [],
+  "giftLoves": [],
+  "giftLikes": [],
+  "giftDislikes": []
+}

@@ -19,6 +19,24 @@ repositories {
 dependencies {
     compileOnly(libs.jetbrains.annotations)
     compileOnly(libs.jspecify)
+    // Local sibling mod API (build Aetherhaven first). Prefer the published jar when present.
+    val aetherhavenLibs = file("../Aetherhaven/build/libs")
+    val aetherhavenJar =
+        aetherhavenLibs
+            .takeIf { it.isDirectory }
+            ?.listFiles()
+            ?.filter {
+                it.isFile &&
+                    it.name.endsWith(".jar") &&
+                    !it.name.contains("-sources") &&
+                    !it.name.contains("-javadoc")
+            }
+            ?.maxByOrNull { it.lastModified() }
+    if (aetherhavenJar != null) {
+        compileOnly(files(aetherhavenJar))
+    } else {
+        compileOnly(files("../Aetherhaven/build/classes/java/main"))
+    }
 }
 
 hytale {

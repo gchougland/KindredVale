@@ -10,7 +10,9 @@
   ],
   "Website": "${plugin_website}",
   "ServerVersion": "${server_version}",
-  "Dependencies": {},
+  "Dependencies": {
+    "Hexvane:Aetherhaven": "*"
+  },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": true,
