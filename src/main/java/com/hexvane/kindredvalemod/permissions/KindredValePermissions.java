@@ -1,5 +1,6 @@
 package com.hexvane.kindredvalemod.permissions;
 
+import com.hypixel.hytale.server.core.permissions.PermissionQuery;
 import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 
 import javax.annotation.Nonnull;
@@ -17,7 +18,7 @@ public final class KindredValePermissions {
     public static final String GROUP_HUB_BUILDER = "kindredvale:HubBuilder";
 
     @Nonnull
-    private static String hubBuildPermission = "hexvane.kindredvalemod.hub.build";
+    private static PermissionQuery hubBuildPermission = PermissionQuery.of("hexvane.kindredvalemod.hub.build");
 
     private KindredValePermissions() {
     }
@@ -29,15 +30,15 @@ public final class KindredValePermissions {
      * @param basePermission the plugin base permission (from {@code getBasePermission()})
      */
     public static void register(@Nonnull final String basePermission) {
-        hubBuildPermission = basePermission + ".hub.build";
-        PermissionsModule.registerPermission(hubBuildPermission, GROUP_HUB_BUILDER);
+        hubBuildPermission = PermissionQuery.of(basePermission + ".hub.build");
+        PermissionsModule.registerPermission(hubBuildPermission.getId(), GROUP_HUB_BUILDER);
     }
 
     /**
-     * @return permission node allowing block changes in protected hub worlds
+     * @return permission lookup allowing block changes in protected hub worlds
      */
     @Nonnull
-    public static String getHubBuildPermission() {
+    public static PermissionQuery getHubBuildPermission() {
         return hubBuildPermission;
     }
 }

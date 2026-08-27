@@ -2,6 +2,12 @@
 
 All notable changes to KindredValeMod are documented in this file.
 
+## [0.2.0] - 2026-08-27
+
+### Changed
+
+- **Hytale Update 6** — Targets server range `>=0.6.0-pre.0 <0.7.0`. `/hub` now declares `requireNoPermission()` (the old `canGeneratePermission` override is gone). Hub build checks hold a `PermissionQuery` instead of rebuilding the node string on every lookup. Hexvane's world NPC role matches the current Aetherhaven greeter pattern (`BusyStates` empty, interact opens dialogue without a `$Interaction` state gate).
+
 ## [0.1.1] - 2026-07-03
 
 ### Changed

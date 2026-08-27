@@ -22,13 +22,8 @@ public final class HubCommand extends AbstractPlayerCommand {
 
     public HubCommand(@Nonnull final WorldTeleportService teleportService) {
         super("hub", "Teleport to the Kindred Vale hub");
+        requireNoPermission();
         this.teleportService = teleportService;
-    }
-
-    @Override
-    protected boolean canGeneratePermission() {
-        // Public hub return for all players; do not register a permission node.
-        return false;
     }
 
     @Override
