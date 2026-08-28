@@ -164,8 +164,10 @@ public final class AetherhavenIntegration {
                     upsert.invoke(registry, existing);
                     invoke(npcs, "save", new Class<?>[] { World.class }, world);
                 }
-                invoke(npcs, "ensure", new Class<?>[] { World.class, String.class }, world, cfg.getPlacementId());
-                LOGGER.atInfo().log("Ensured Hexvane world NPC placement %s in %s", cfg.getPlacementId(), world.getName());
+                // respawn clears a stale entityUuid that ensure() treats as "still in an unloaded chunk"
+                // and therefore never re-spawns.
+                invoke(npcs, "respawn", new Class<?>[] { World.class, String.class }, world, cfg.getPlacementId());
+                LOGGER.atInfo().log("Respawned Hexvane world NPC placement %s in %s", cfg.getPlacementId(), world.getName());
                 return;
             }
 

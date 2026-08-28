@@ -7,6 +7,7 @@ All notable changes to KindredValeMod are documented in this file.
 ### Changed
 
 - **Hytale Update 6** — Targets server range `>=0.6.0-pre.0 <0.7.0`. `/hub` now declares `requireNoPermission()` (the old `canGeneratePermission` override is gone). Hub build checks hold a `PermissionQuery` instead of rebuilding the node string on every lookup. Hexvane's world NPC role matches the current Aetherhaven greeter pattern (`BusyStates` empty, interact opens dialogue without a `$Interaction` state gate).
+- **Hexvane spawn** — Role and model now load on the engine paths (`Server/NPC/Roles`, `Server/Models`) so `spawnNPC` can find `KindredVale_Hexvane`. Existing world-NPC placements are respawned instead of `ensure`, which skipped spawn when a stale entity UUID looked unloaded.
 
 ## [0.1.1] - 2026-07-03
 
