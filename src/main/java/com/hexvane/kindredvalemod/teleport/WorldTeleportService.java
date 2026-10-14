@@ -5,7 +5,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
-import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -17,6 +16,9 @@ import org.joml.Vector3d;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 /**
  * Shared same-instance world teleport used by dialogue actions and {@code /hub}.
@@ -67,36 +69,40 @@ public final class WorldTeleportService {
         Ref<EntityStore> liveRef = player.getReference();
         final String worldName = destination.getWorldName();
         final String destId = destination.getId();
-        final boolean useSpawn = destination.isUseWorldSpawn();
-        final double x = destination.getX();
-        final double y = destination.getY();
-        final double z = destination.getZ();
-        final float yawDegrees = destination.getYawDegrees();
 
-        Runnable apply = () -> {
-            Store<EntityStore> liveStore = liveRef.getStore();
-            if (liveStore == null) {
-                return;
-            }
-            World world = Universe.get().getWorld(worldName);
-            if (world == null) {
-                notifyPlayer(liveStore, liveRef, "That world is not available right now.");
-                return;
-            }
-            Teleport teleport = buildTeleport(liveRef, liveStore, world, useSpawn, x, y, z, yawDegrees);
-            if (teleport == null) {
-                notifyPlayer(liveStore, liveRef, "Could not find a spawn point for that world.");
-                return;
-            }
-            liveStore.addComponent(liveRef, Teleport.getComponentType(), teleport);
-            LOGGER.atInfo().log("Teleported player to %s (%s)", worldName, destId);
-        };
-
-        if (current != null) {
-            current.execute(apply);
-        } else {
-            apply.run();
-        }
+        // A world spawn may have to load its chunk first, so the teleport is applied once the spawn point is known,
+        // on the thread of the world the player is in.
+        Executor playerWorld = current != null ? current : Runnable::run;
+        buildTeleport(
+            player.getUuid(),
+            targetWorld,
+            destination.isUseWorldSpawn(),
+            destination.getX(),
+            destination.getY(),
+            destination.getZ(),
+            destination.getYawDegrees()
+        )
+            .exceptionally(error -> {
+                LOGGER.atWarning().withCause(error).log("Could not resolve the spawn of world %s (%s)", worldName, destId);
+                return null;
+            })
+            .thenAcceptAsync(teleport -> {
+                if (!liveRef.isValid()) {
+                    return;
+                }
+                Store<EntityStore> liveStore = liveRef.getStore();
+                if (teleport == null) {
+                    notifyPlayer(liveStore, liveRef, "Could not find a spawn point for that world.");
+                    return;
+                }
+                liveStore.addComponent(liveRef, Teleport.getComponentType(), teleport);
+                LOGGER.atInfo().log("Teleported player to %s (%s)", worldName, destId);
+            }, playerWorld)
+            .whenComplete((ignored, error) -> {
+                if (error != null) {
+                    LOGGER.atSevere().withCause(error).log("Failed to teleport player to %s (%s)", worldName, destId);
+                }
+            });
         return true;
     }
 
@@ -122,10 +128,12 @@ public final class WorldTeleportService {
         return destinationsConfig.get().getHubDestinationId();
     }
 
-    @Nullable
-    private static Teleport buildTeleport(
-        @Nonnull Ref<EntityStore> playerRef,
-        @Nonnull Store<EntityStore> store,
+    /**
+     * @return the teleport into {@code targetWorld}, or a future holding null when that world has no spawn point
+     */
+    @Nonnull
+    private static CompletableFuture<Teleport> buildTeleport(
+        @Nonnull UUID playerUuid,
         @Nonnull World targetWorld,
         boolean useWorldSpawn,
         double x,
@@ -136,17 +144,14 @@ public final class WorldTeleportService {
         if (useWorldSpawn) {
             var spawnProvider = targetWorld.getWorldConfig().getSpawnProvider();
             if (spawnProvider == null) {
-                return null;
+                return CompletableFuture.completedFuture(null);
             }
-            Transform spawnPoint = spawnProvider.getSpawnPoint(playerRef, store);
-            if (spawnPoint == null) {
-                return null;
-            }
-            return Teleport.createForPlayer(targetWorld, spawnPoint);
+            return spawnProvider.getSpawnPointAsync(targetWorld, playerUuid)
+                .thenApply(spawnPoint -> spawnPoint != null ? Teleport.createForPlayer(targetWorld, spawnPoint) : null);
         }
         Vector3d pos = new Vector3d(x, y, z);
         Rotation3f facing = new Rotation3f(0f, (float) Math.toRadians(yawDegrees), 0f);
-        return Teleport.createForPlayer(targetWorld, pos, facing);
+        return CompletableFuture.completedFuture(Teleport.createForPlayer(targetWorld, pos, facing));
     }
 
     @Nullable

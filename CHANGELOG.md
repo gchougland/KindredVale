@@ -2,6 +2,12 @@
 
 All notable changes to KindredValeMod are documented in this file.
 
+## [0.3.0] - 2026-10-12
+
+### Changed
+
+- **Hytale Update 7** — Kindred Vale now runs on Hytale Update 7 (0.7.0), alongside Aetherhaven 4.0.0.
+
 ## [0.2.0] - 2026-08-27
 
 ### Changed
